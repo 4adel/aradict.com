@@ -53,7 +53,7 @@ export default function AddSound(props) {
 
   function Recorde() {
     if (isRecordeing) {
-      return alert.show(MSGsArray.ALREADY_RECORDING.msg);
+      return Stop();
     }
     alert.show(MSGsArray.START_RECORDING.msg);
     chunks = [];
@@ -116,7 +116,6 @@ export default function AddSound(props) {
     function handler(e) {
       switch (e.code) {
         case "KeyR":
-          if (isRecordeing) return Stop();
           Recorde();
           break;
         case "KeyS":
@@ -152,10 +151,11 @@ export default function AddSound(props) {
       </div>
       <div className={Classes.buttons}>
         <button onClick={Recorde}>
-          Record <span className={Classes.recording}></span>
+          {isRecordeing ? "stop" : "Record"}
+          <span className={Classes.recording}></span>
         </button>
-        <button>Stop</button>
-        <button>Play</button>
+
+        <button onClick={Play}>Play</button>
         <button>Submit</button>
       </div>
     </div>
