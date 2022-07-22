@@ -1,3 +1,5 @@
+@import url("https://www.fontstatic.com/f=bahij");
+
 html,
 body {
   padding: 0;
@@ -13,4 +15,12 @@ a {
 
 * {
   box-sizing: border-box;
+  font-family: 'bahij';
+  direction: rtl;
+  user-select: none;
+}
+
+
+#__next {
+  background-color: #f5f5f9;
 }
