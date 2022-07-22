@@ -44,7 +44,7 @@ const Footer = () => {
       </div>
       <div className={Classes.copyrights}>
         Made By{" "}
-        <a href="https://github.com/4adel" target="_blank">
+        <a href="https://github.com/4adel" target="_blank" rel="noreferrer">
           Ahmad Addel
         </a>{" "}
       </div>
