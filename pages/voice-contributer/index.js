@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useState } from "react";
-import styles from "../styles/add-sound.module.scss";
+import styles from "../../styles/add-sound.module.scss";
 let chunks = [];
 import { useAlert } from "react-alert";
+import { verify } from "jsonwebtoken";
+import { FirstLayer, ThirdLayer } from "../../utils/AuthLayers";
+import Head from "next/head";
 
 const MSGsArray = Object.freeze({
   NOT_RECORDING_YET: {
@@ -33,11 +36,17 @@ export default function AddSound(props) {
   const [isRecordeing, setIsRecording] = React.useState(false);
   const { data, isLoading, isRefetching, error, refetch } = useQuery(
     ["getRandomWord"],
-    () =>
-      fetch(`/api/hello`).then(async (e) => {
-        const data = await e.json();
-        return data;
-      })
+    () => {
+      return new Promise((res, rej) => {
+        return res({
+          ar: "انا",
+        });
+      });
+    }
+    // fetch(`/api/hello`).then(async (e) => {
+    // const data = await e.json();
+    // return data;
+    // })
   );
 
   const Classes = {
@@ -136,9 +145,12 @@ export default function AddSound(props) {
 
   return (
     <div className={Classes.addSoundWrapper}>
+      <Head>
+        <title>Contribute Sound</title>
+      </Head>
       <div className={Classes.shortcuts}>
         <span>
-          \r\ {isRecordeing ? "Recording ...." : "Record"}
+          \r\ {isRecordeing ? "Stop.." : "Record"}
           <span className={Classes.recording}></span>
         </span>
         <span>\p\ Play</span>
@@ -161,3 +173,20 @@ export default function AddSound(props) {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  return verify(ctx.req.cookies.token, process.env.JWT_SECRET, (err, data) => {
+    if (err || !FirstLayer.includes(data.role))
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    return {
+      props: {
+        userType: data.role,
+      },
+    };
+  });
+};

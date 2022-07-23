@@ -1,10 +1,11 @@
+import { verify } from "jsonwebtoken";
 import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 import Content from "../components/Content";
 import Footer from "../components/Footer";
 import styles from "../styles/Home.module.scss";
-var isArabic =
+const isArabic =
   /^([\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufbc1]|[\ufbd3-\ufd3f]|[\ufd50-\ufd8f]|[\ufd92-\ufdc7]|[\ufe70-\ufefc]|[\ufdf0-\ufdfd])*$/g;
 
 export default function Home() {
@@ -23,6 +24,9 @@ export default function Home() {
   return (
     <>
       <span className={Classes.topBar}></span>
+      <Head>
+        <title>Aradict.com | أرادكت</title>
+      </Head>
       <div className={Classes.pageContainer}>
         <section className={Classes.primarySection}>
           <div className={Classes.content}>
@@ -76,3 +80,18 @@ export default function Home() {
 
   function Submit() {}
 }
+
+export const getServerSideProps = async (ctx) => {
+  return verify(
+    ctx.req.cookies.token || "",
+    process.env.JWT_SECRET,
+    (err, data) => {
+      if (err) return { props: { usetType: "visitor" } };
+      return {
+        props: {
+          userType: data.role,
+        },
+      };
+    }
+  );
+};
